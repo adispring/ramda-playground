@@ -1,7 +1,7 @@
 {
-  "name": "play-with-ramda",
+  "name": "ramda-playground",
   "version": "1.0.0",
-  "description": "play with ramda source code",
+  "description": "write some ramda biz function",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
