@@ -1,6 +1,6 @@
 import * as R from 'ramda'
 
-import { searchItem, searchItemSub } from '../mock/search'
+import { searchItem, searchItemSub, searchFavGroupAndFriend } from '../mock/search'
 import { HighlightType } from '../constants/biz/proto'
 import { SpanType } from '../constants/biz/conversation'
 const { TITLE, SUB_TITLE } = HighlightType
@@ -67,7 +67,7 @@ const transformToSpans = (highlights, txt) => {
   return spans
 }
 
-const formatSearchItem = ({ highlights, title, subtitle }) => {
+export const formatSearchItem = ({ highlights, title, subtitle }) => {
   const type = R.pathOr(TITLE, [0, 'type'], highlights)
   const text = type === TITLE ? title : subtitle
   const spans = transformToSpans(highlights, text)
@@ -89,3 +89,27 @@ const formatedItem = formatSearchItem(searchItem)
 const formatedSubItem = formatSearchItem(searchItemSub)
 
 console.log(formatedItem)
+
+export const formatSearchGroupsAndUsers = ({
+  contacts = [],
+  groups = {},
+  users = {}
+}) =>
+  R.compose(
+    ([groupsPart, usersPart]) => {
+      const newGroups = groupsPart.map(item =>
+        R.mergeRight(item, groups[item.id])
+      )
+      const newUsers = usersPart.map(item => R.mergeRight(item, users[item.id]))
+      return { groups: newGroups, users: newUsers }
+    },
+    R.partition(item => groups[item.id])
+  )(contacts)
+
+
+const formatSearchGroupsAndUsersResult = formatSearchGroupsAndUsers(searchFavGroupAndFriend)
+
+console.log(formatSearchGroupsAndUsersResult)
+
+console.log('haha')
+
